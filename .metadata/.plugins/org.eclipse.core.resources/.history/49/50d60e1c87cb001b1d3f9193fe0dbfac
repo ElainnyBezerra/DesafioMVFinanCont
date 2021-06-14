@@ -1,0 +1,196 @@
+package entidade;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "CLIENTE")
+public class Cliente {
+	
+	@Id
+	@Column(name = "ID_CLIENTE")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator =
+	 "s_id_cliente")
+	@SequenceGenerator(name = "s_id_cliente", sequenceName = "S_ID_CLIENTE" ,
+	 allocationSize = 1, initialValue = 10)
+	private int idCliente;
+
+	private String nome;
+
+	@Column(name = "CPF_CNPJ")
+	private String cpfCnpj;
+
+	@Column(name = "RG_IE")
+	private String rgIe;
+
+	private String telefone;
+
+	@Column(name = "SALDO_INICIAL")
+	private Double saldoInicial;
+
+	@Column(name = "SALDO_ATUAL")
+	private Double saldoAtual;
+
+	//@OneToOne(cascade = CascadeType.ALL)
+	//@JoinColumn(name = "ID_ENDERECO", referencedColumnName = "ID_ENDERECO")
+	//private Endereco endereco;
+
+	//@OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
+	//@JoinColumn(name = "ID_CLIENTE", referencedColumnName = "ID_CLIENTE")
+	//private List<Conta> listaConta;
+
+	public int getIdCliente() {
+		return idCliente;
+	}
+
+	public void setIdCliente(int idCliente) {
+		this.idCliente = idCliente;
+	}
+
+	public String getNome() {
+		return nome;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+
+	public String getCpfCnpj() {
+		return cpfCnpj;
+	}
+
+	public void setCpfCnpj(String cpfCnpj) {
+		this.cpfCnpj = cpfCnpj;
+	}
+
+	public String getRgIe() {
+		return rgIe;
+	}
+
+	public void setRgIe(String rgIe) {
+		this.rgIe = rgIe;
+	}
+
+	public String getTelefone() {
+		return telefone;
+	}
+
+	public void setTelefone(String telefone) {
+		this.telefone = telefone;
+	}
+
+	public Double getSaldoInicial() {
+		return saldoInicial;
+	}
+
+	public void setSaldoInicial(Double saldoInicial) {
+		this.saldoInicial = saldoInicial;
+	}
+
+	public Double getSaldoAtual() {
+		return saldoAtual;
+	}
+
+	public void setSaldoAtual(Double saldoAtual) {
+		this.saldoAtual = saldoAtual;
+	}
+
+	/*public Endereco getEndereco() {
+		return endereco;
+	}
+
+	public void setEndereco(Endereco endereco) {
+		this.endereco = endereco;
+	}
+
+	public List<Conta> getListaConta() {
+		return listaConta;
+	}
+
+	public void setListaConta(List<Conta> listaConta) {
+		this.listaConta = listaConta;
+	}
+
+	@Override
+	public String toString() {
+		return "Cliente [idCliente=" + idCliente + ", nome=" + nome + ", cpfCnpj=" + cpfCnpj + ", rgIe=" + rgIe
+				+ ", telefone=" + telefone + ", saldoInicial=" + saldoInicial + ", saldoAtual=" + saldoAtual
+				+ ", endereco=" + endereco + ", listaConta=" + listaConta + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((cpfCnpj == null) ? 0 : cpfCnpj.hashCode());
+		result = prime * result + ((endereco == null) ? 0 : endereco.hashCode());
+		result = prime * result + idCliente;
+		result = prime * result + ((listaConta == null) ? 0 : listaConta.hashCode());
+		result = prime * result + ((nome == null) ? 0 : nome.hashCode());
+		result = prime * result + ((rgIe == null) ? 0 : rgIe.hashCode());
+		result = prime * result + ((saldoAtual == null) ? 0 : saldoAtual.hashCode());
+		result = prime * result + ((saldoInicial == null) ? 0 : saldoInicial.hashCode());
+		result = prime * result + ((telefone == null) ? 0 : telefone.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Cliente other = (Cliente) obj;
+		if (cpfCnpj == null) {
+			if (other.cpfCnpj != null)
+				return false;
+		} else if (!cpfCnpj.equals(other.cpfCnpj))
+			return false;
+		if (endereco == null) {
+			if (other.endereco != null)
+				return false;
+		} else if (!endereco.equals(other.endereco))
+			return false;
+		if (idCliente != other.idCliente)
+			return false;
+		if (listaConta == null) {
+			if (other.listaConta != null)
+				return false;
+		} else if (!listaConta.equals(other.listaConta))
+			return false;
+		if (nome == null) {
+			if (other.nome != null)
+				return false;
+		} else if (!nome.equals(other.nome))
+			return false;
+		if (rgIe == null) {
+			if (other.rgIe != null)
+				return false;
+		} else if (!rgIe.equals(other.rgIe))
+			return false;
+		if (saldoAtual == null) {
+			if (other.saldoAtual != null)
+				return false;
+		} else if (!saldoAtual.equals(other.saldoAtual))
+			return false;
+		if (saldoInicial == null) {
+			if (other.saldoInicial != null)
+				return false;
+		} else if (!saldoInicial.equals(other.saldoInicial))
+			return false;
+		if (telefone == null) {
+			if (other.telefone != null)
+				return false;
+		} else if (!telefone.equals(other.telefone))
+			return false;
+		return true;
+	}*/
+
+}

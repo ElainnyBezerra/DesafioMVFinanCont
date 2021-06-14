@@ -1,0 +1,18 @@
+package DesafioMVFinanCont.DesafioMVFinanCont;
+
+import javax.persistence.EntityManager;
+
+import util.JpaUtil;
+
+/**
+ * Hello world!
+ *
+ */
+public class App 
+{
+    public static void main( String[] args )
+    {
+       EntityManager ent = JpaUtil.getEntityManager();
+       System.out.println(ent.isOpen());
+    }
+}

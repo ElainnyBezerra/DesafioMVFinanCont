@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+<fullyQualifiedTypeName name="entidade.Endereco"/>
+<fullyQualifiedTypeName name="dao.EnderecoDao"/>
+<fullyQualifiedTypeName name="dao.impl.EnderecoDaoImpl"/>
+<fullyQualifiedTypeName name="javax.persistence.CascadeType"/>
+<fullyQualifiedTypeName name="javax.persistence.Query"/>
+<fullyQualifiedTypeName name="entidade.Conta"/>
+<fullyQualifiedTypeName name="dao.impl.ContaDaoImpl"/>
+<fullyQualifiedTypeName name="dao.ContaDao"/>
+<fullyQualifiedTypeName name="java.util.ArrayList"/>
+<fullyQualifiedTypeName name="java.util.List"/>
+<fullyQualifiedTypeName name="javax.persistence.EntityManager"/>
+<fullyQualifiedTypeName name="util.JpaUtil"/>
+<fullyQualifiedTypeName name="org.hibernate.type.descriptor.java.UUIDTypeDescriptor.ToStringTransformer"/>
+<fullyQualifiedTypeName name="javax.persistence.OneToOne"/>
+<fullyQualifiedTypeName name="javax.persistence.ManyToOne"/>
+<fullyQualifiedTypeName name="javax.persistence.Entity"/>
+<fullyQualifiedTypeName name="javax.persistence.Table"/>
+<fullyQualifiedTypeName name="entidade.Movimentacoes"/>
+<fullyQualifiedTypeName name="dao.impl.MovimentacoesDaoImpl"/>
+<fullyQualifiedTypeName name="dao.MovimentacoesDao"/>
+<fullyQualifiedTypeName name="java.util.Scanner"/>
+<fullyQualifiedTypeName name="entidade.Menu"/>
+<fullyQualifiedTypeName name="java.sql.Date"/>
+<fullyQualifiedTypeName name="java.text.SimpleDateFormat"/>
+<fullyQualifiedTypeName name="java.util.Date"/>
+<fullyQualifiedTypeName name="javax.persistence.StoredProcedureQuery"/>
+<fullyQualifiedTypeName name="javax.persistence.ParameterMode"/>
+</qualifiedTypeNameHistroy>

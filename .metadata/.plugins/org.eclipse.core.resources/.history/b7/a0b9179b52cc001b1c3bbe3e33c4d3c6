@@ -1,0 +1,145 @@
+package entidade;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "Movimentacoes")
+public class Movimentacoes {
+
+	@Id
+	@Column(name = "ID_MOVIM")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "s_id_movim")
+	@SequenceGenerator(name = "s_id_movim", sequenceName = "S_ID_MOVIM", allocationSize = 1, initialValue = 1)
+	private int idMovim;
+
+	private String dataMovim;
+
+	@Column(name = "QTD_CREDITO")
+	private String qtdCredito;
+
+	@Column(name = "QTD_DEBITO")
+	private String qtdDebito;
+
+	@JoinColumn(name = "ID_CLIENTE", referencedColumnName = "ID_CLIENTE")
+	@ManyToOne
+	private Cliente cliente;
+
+	@JoinColumn(name = "ID_CONTA", referencedColumnName = "ID_CONTA")
+	@ManyToOne
+	private Conta conta;
+
+	public int getIdMovim() {
+		return idMovim;
+	}
+
+	public void setIdMovim(int idMovim) {
+		this.idMovim = idMovim;
+	}
+
+	public String getDataMovim() {
+		return dataMovim;
+	}
+
+	public void setDataMovim(String dataMovim) {
+		this.dataMovim = dataMovim;
+	}
+
+	public String getQtdCredito() {
+		return qtdCredito;
+	}
+
+	public void setQtdCredito(String qtdCredito) {
+		this.qtdCredito = qtdCredito;
+	}
+
+	public String getQtdDebito() {
+		return qtdDebito;
+	}
+
+	public void setQtdDebito(String qtdDebito) {
+		this.qtdDebito = qtdDebito;
+	}
+
+	public Cliente getCliente() {
+		return cliente;
+	}
+
+	public void setCliente(Cliente cliente) {
+		this.cliente = cliente;
+	}
+
+	public Conta getConta() {
+		return conta;
+	}
+
+	public void setConta(Conta conta) {
+		this.conta = conta;
+	}
+
+	@Override
+	public String toString() {
+		return "Movimentacoes [idMovim=" + idMovim + ", dataMovim=" + dataMovim + ", qtdCredito=" + qtdCredito
+				+ ", qtdDebito=" + qtdDebito + ", cliente=" + cliente + ", conta=" + conta + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((cliente == null) ? 0 : cliente.hashCode());
+		result = prime * result + ((conta == null) ? 0 : conta.hashCode());
+		result = prime * result + ((dataMovim == null) ? 0 : dataMovim.hashCode());
+		result = prime * result + idMovim;
+		result = prime * result + ((qtdCredito == null) ? 0 : qtdCredito.hashCode());
+		result = prime * result + ((qtdDebito == null) ? 0 : qtdDebito.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Movimentacoes other = (Movimentacoes) obj;
+		if (cliente == null) {
+			if (other.cliente != null)
+				return false;
+		} else if (!cliente.equals(other.cliente))
+			return false;
+		if (conta == null) {
+			if (other.conta != null)
+				return false;
+		} else if (!conta.equals(other.conta))
+			return false;
+		if (dataMovim == null) {
+			if (other.dataMovim != null)
+				return false;
+		} else if (!dataMovim.equals(other.dataMovim))
+			return false;
+		if (idMovim != other.idMovim)
+			return false;
+		if (qtdCredito == null) {
+			if (other.qtdCredito != null)
+				return false;
+		} else if (!qtdCredito.equals(other.qtdCredito))
+			return false;
+		if (qtdDebito == null) {
+			if (other.qtdDebito != null)
+				return false;
+		} else if (!qtdDebito.equals(other.qtdDebito))
+			return false;
+		return true;
+	}
+
+}

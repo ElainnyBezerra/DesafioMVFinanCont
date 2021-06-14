@@ -1,0 +1,154 @@
+package dao.impl;
+
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.persistence.ParameterMode;
+import javax.persistence.Query;
+import javax.persistence.StoredProcedureQuery;
+
+import dao.ClienteDao;
+import entidade.Cliente;
+import util.JpaUtil;
+
+public class ClienteDaoImpl implements ClienteDao {
+
+	private EntityManager em;
+	private EntityTransaction et;
+
+	public void salvar(Cliente cliente) {
+		try {
+			this.em = JpaUtil.getEntityManager();
+			et = em.getTransaction();
+			et.begin();
+			em.persist(cliente);
+			et.commit();
+			System.out.println("Cadastro realizado com sucesso!");
+		} catch (Exception e) {
+			if (em.isOpen()) {
+				et.rollback();
+			}
+			System.out.println("Cadastro não realizado! Favor verificar informações.");
+		} finally {
+			if (em.isOpen()) {
+				em.close();
+			}
+		}
+
+	}
+
+	public void alterar(Cliente cliente) {
+		try {
+			this.em = JpaUtil.getEntityManager();
+			et = em.getTransaction();
+			et.begin();
+			em.merge(cliente);
+			et.commit();
+			System.out.println("Cadastro realizado com sucesso!");
+		} catch (Exception e) {
+			if (em.isOpen()) {
+				et.rollback();
+			}
+			System.out.println("Alteração não realizada! Favor verificar informações.");
+		} finally {
+			if (em.isOpen()) {
+				em.close();
+			}
+		}
+
+	}
+
+	public void remover(Cliente cliente) {
+		int idCliente = 0;
+		try {
+			if (cliente.getRg() != null) {
+				StoredProcedureQuery query = em.createStoredProcedureQuery("BUSCA_CLIENTE_CPF")
+						.registerStoredProcedureParameter(1, String.class, ParameterMode.IN)
+						.registerStoredProcedureParameter(2, String.class, ParameterMode.IN)
+						.registerStoredProcedureParameter(3, int.class, ParameterMode.OUT)
+						.setParameter(1, cliente.getCpfCnpj()).setParameter(2, cliente.getRg());
+
+				query.execute();
+
+				idCliente = (int) query.getOutputParameterValue(3);
+			} else {
+				StoredProcedureQuery query = em.createStoredProcedureQuery("BUSCA_CLIENTE_CNPJ")
+						.registerStoredProcedureParameter(1, String.class, ParameterMode.IN)
+						.registerStoredProcedureParameter(2, String.class, ParameterMode.IN)
+						.registerStoredProcedureParameter(3, int.class, ParameterMode.OUT)
+						.setParameter(1, cliente.getCpfCnpj()).setParameter(2, cliente.getIe());
+
+				query.execute();
+
+				idCliente = (int) query.getOutputParameterValue(3);
+			}
+			this.em = JpaUtil.getEntityManager();
+			et = em.getTransaction();
+			et.begin();
+			em.remove(em.find(Cliente.class, idCliente));
+			et.commit();
+			System.out.println("Cadastro excluído com sucesso!");
+		} catch (Exception e) {
+			if (em.isOpen()) {
+				et.rollback();
+			}
+			System.out.println("Exclusão não realizada! Favor verificar informações!");
+		} finally {
+			if (em.isOpen()) {
+				em.close();
+			}
+		}
+
+	}
+
+	public Cliente pesquisar(Cliente cliente) {
+		
+		int idCliente = 0;
+		
+		try {
+			this.em = JpaUtil.getEntityManager();
+			if (cliente.getRg() != null) {
+				StoredProcedureQuery query = em.createStoredProcedureQuery("BUSCA_CLIENTE_CPF")
+						.registerStoredProcedureParameter(1, String.class, ParameterMode.IN)
+						.registerStoredProcedureParameter(2, String.class, ParameterMode.IN)
+						.registerStoredProcedureParameter(3, int.class, ParameterMode.OUT)
+						.setParameter(1, cliente.getCpfCnpj()).setParameter(2, cliente.getRg());
+
+				query.execute();
+
+				idCliente = (int) query.getOutputParameterValue(3);
+			} else {
+				StoredProcedureQuery query = em.createStoredProcedureQuery("BUSCA_CLIENTE_CNPJ")
+						.registerStoredProcedureParameter(1, String.class, ParameterMode.IN)
+						.registerStoredProcedureParameter(2, String.class, ParameterMode.IN)
+						.registerStoredProcedureParameter(3, int.class, ParameterMode.OUT)
+						.setParameter(1, cliente.getCpfCnpj()).setParameter(2, cliente.getIe());
+
+				query.execute();
+
+				idCliente = (int) query.getOutputParameterValue(3);
+			}
+			cliente = em.find(Cliente.class, idCliente);
+		} catch (Exception e) {
+			if (em.isOpen()) {
+				et.rollback();
+			}
+			System.out.println("Favor verificar as informações!");
+		} finally {
+			if (em.isOpen()) {
+				em.close();
+			}
+		}
+		return cliente;
+	}
+
+	public List<Cliente> listarTodos() {
+		this.em = JpaUtil.getEntityManager();
+		Query query = em.createQuery("from Cliente e");
+		List<Cliente> listaCliente = query.getResultList();
+		em.close();
+		return listaCliente;
+	}
+
+}

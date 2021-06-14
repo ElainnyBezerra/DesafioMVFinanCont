@@ -1,0 +1,15 @@
+package entidade;
+
+public class Menu {
+	
+	public static void menu() {
+
+		System.out.println("\n");
+		System.out.println("**************************");
+		System.out.println("*                        *");
+		System.out.println("* CADASTRO CAFÉ DA MANHÃ *");
+		System.out.println("*                        *");
+		System.out.println("**************************");
+	}
+
+}

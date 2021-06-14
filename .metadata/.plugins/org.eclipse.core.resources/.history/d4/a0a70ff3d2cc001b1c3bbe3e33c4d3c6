@@ -1,0 +1,522 @@
+package DesafioMVFinanCont.DesafioMVFinanCont;
+
+import java.util.Date;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+import javax.persistence.ParameterMode;
+import javax.persistence.StoredProcedureQuery;
+
+import dao.ClienteDao;
+import dao.ContaDao;
+import dao.EnderecoDao;
+import dao.MovimentacoesDao;
+import dao.impl.ClienteDaoImpl;
+import dao.impl.ContaDaoImpl;
+import dao.impl.EnderecoDaoImpl;
+import dao.impl.MovimentacoesDaoImpl;
+import entidade.Cliente;
+import entidade.Conta;
+import entidade.Endereco;
+import entidade.Menu;
+import entidade.Movimentacoes;
+
+public class App {
+	public static void main(String[] args) {
+
+		Date data = new Date();
+		SimpleDateFormat date = new SimpleDateFormat("dd/MM/yyyy");
+
+		Endereco end = new Endereco();
+		EnderecoDao enderecoDao = new EnderecoDaoImpl();
+
+		Conta cont = new Conta();
+		ContaDao contaDao = new ContaDaoImpl();
+		List<Conta> listaConta = new ArrayList<Conta>();
+
+		Cliente cli = new Cliente();
+		ClienteDao clienteDao = new ClienteDaoImpl();
+
+		Movimentacoes mov = new Movimentacoes();
+		MovimentacoesDao movDao = new MovimentacoesDaoImpl();
+		List<Movimentacoes> listaMov = new ArrayList<Movimentacoes>();
+
+		int menu = 0;
+		Scanner fcInt = new Scanner(System.in);
+		Scanner fcString = new Scanner(System.in);
+
+		do {
+			Menu.menu();
+			Menu.subMenu();
+			System.out.println("Informe a opção desejada: ");
+			menu = fcInt.nextInt();
+
+			switch (menu) {
+
+			case 1: // Cadastros
+				Menu.menu();
+				Menu.opCad();
+				System.out.println("Informe a opção desejada: ");
+				int opcao = fcInt.nextInt();
+
+				switch (opcao) {
+
+				case 1: // Novo Cadastro
+					Menu.menu();
+					Menu.opcao();
+					System.out.println("Informe a opção desejada: ");
+					int resp = fcInt.nextInt();
+					if (resp == 1) { // Novo Cadastro Cliente
+						System.out.println("Informe 1-PJ / 2-PF: ");
+						int op = fcInt.nextInt();
+						if (op < 1 || op > 2) {
+							System.out.println("Opção Inválida!");
+							System.out.println("Informe 1-PJ / 2-PF: ");
+							op = fcInt.nextInt();
+						} else if (op == 1) {
+							System.out.println("Informe o Cnpj: ");
+							cli.setCpfCnpj(fcString.nextLine());
+							System.out.println("Informe a Insc.Estadual: ");
+							cli.setIe(fcString.nextLine());
+						} else {
+							System.out.println("Informe o CPF: ");
+							cli.setCpfCnpj(fcString.nextLine());
+							System.out.println("Informe o RG: ");
+							cli.setRg(fcString.nextLine());
+						}
+						System.out.println("\nInforme o Nome: ");
+						cli.setNome(fcString.nextLine());
+						System.out.println("Informe o Telefone");
+						cli.setTelefone(fcString.nextLine());
+
+						System.out.println("Informe a Rua: ");
+						end.setRua(fcString.nextLine());
+						System.out.println("\nInforme o Número: ");
+						end.setNumero(fcInt.nextInt());
+						System.out.println("\nInforme o Complemento: ");
+						end.setComplemento(fcString.nextLine());
+						System.out.println("\nInforme o Bairro: ");
+						end.setBairro(fcString.nextLine());
+						System.out.println("\nInforme o Cep: ");
+						end.setCep(fcInt.nextInt());
+						System.out.println("\nInforme a Cidade: ");
+						end.setCidade(fcString.nextLine());
+						System.out.println("\nInforme a Uf: ");
+						end.setUf(fcString.nextLine());
+						System.out.println("Informe o Número da Conta: ");
+						cont.setNumero(fcString.nextLine());
+						cont.setStatusConta("A");
+						cont.setCliente(cli);
+						listaConta.add(cont);
+						System.out.println("Deseja Cadastrar mais Contas? 1-Sim / 2-Não: ");
+						int cadConta = fcInt.nextInt();
+						while (cadConta == 1) {
+
+							System.out.println("Informe o Número da Conta: ");
+							cont.setNumero(fcString.nextLine());
+							cont.setStatusConta("A");
+							cont.setCliente(cli);
+							listaConta.add(cont);
+							System.out.println("Deseja Cadastrar mais Contas? 1-Sim / 2-Não: ");
+							cadConta = fcInt.nextInt();
+						}
+						System.out.println("Informe o Saldo Inicial: ");
+						cli.setSaldoInicial(fcInt.nextDouble());
+						cli.setSaldoAtual(cli.getSaldoInicial());
+						System.out.println("Informe a data de cadastro(dd/mm/aaaa): ");
+						cli.setDtCadastro(fcString.nextLine());
+						// cli.setDtCadastro(date.format(data));
+						cli.setEndereco(end);
+						cli.setListaConta(listaConta);
+
+						clienteDao.salvar(cli);
+
+					} else if (resp == 2) { // Novo Cadastro Endereço
+						System.out.println("Informe a Rua: ");
+						end.setRua(fcString.nextLine());
+						System.out.println("\nInforme o Número: ");
+						end.setNumero(fcInt.nextInt());
+						System.out.println("\nInforme o Complemento: ");
+						end.setComplemento(fcString.nextLine());
+						System.out.println("\nInforme o Bairro: ");
+						end.setBairro(fcString.nextLine());
+						System.out.println("\nInforme o Cep: ");
+						end.setCep(fcInt.nextInt());
+						System.out.println("\nInforme a Cidade: ");
+						end.setCidade(fcString.nextLine());
+						System.out.println("\nInforme a Uf: ");
+						end.setUf(fcString.nextLine());
+
+						enderecoDao.salvar(end);
+
+					} else if (resp == 3) { // Novo Cadastro Conta
+						System.out.println("Informe o Número da Conta: ");
+						cont.setNumero(fcString.nextLine());
+						cont.setStatusConta("A");
+
+						contaDao.salvar(cont);
+					}
+
+					break;
+
+				case 2: // Alterações
+					Menu.menu();
+					Menu.opcao();
+					System.out.println("Informe a opção desejada: ");
+					int op = fcInt.nextInt();
+					if (op == 1) { // Alteração Cliente
+												
+						System.out.println("Informe 1-PJ / 2-PF: ");
+						int tipo = fcInt.nextInt();
+						if (tipo < 1 || tipo > 2) {
+							System.out.println("Opção Inválida!");
+							System.out.println("Informe 1-PJ / 2-PF: ");
+							op = fcInt.nextInt();
+						} else if (tipo == 1) {
+							System.out.println("Informe o Cnpj: ");
+							cli.setCpfCnpj(fcString.nextLine());
+							System.out.println("Informe a Insc.Estadual: ");
+							cli.setIe(fcString.nextLine());
+						} else {
+							System.out.println("Informe o CPF: ");
+							cli.setCpfCnpj(fcString.nextLine());
+							System.out.println("Informe o RG: ");
+							cli.setRg(fcString.nextLine());
+						}
+						Cliente cliente = clienteDao.pesquisar(cli);
+						cli = cliente;
+						
+						 if (tipo == 1) {
+							System.out.println("Informe o  Cnpj: ");
+							cli.setCpfCnpj(fcString.nextLine());
+							System.out.println("Informe a  Insc.Estadual: ");
+							cli.setIe(fcString.nextLine());
+						} else {
+							System.out.println("Informe o CPF: ");
+							cli.setCpfCnpj(fcString.nextLine());
+							System.out.println("Informe o RG: ");
+							cli.setRg(fcString.nextLine());
+						}
+						System.out.println("\nInforme o Nome: ");
+						cli.setNome(fcString.nextLine());
+						System.out.println("Informe o Telefone");
+						cli.setTelefone(fcString.nextLine());
+
+						clienteDao.alterar(cli);
+
+					} else if (op == 2) { // Alteração Endereço
+
+						List<Endereco> listaEndereco = enderecoDao.listarTodos();
+						Menu.menu();
+						System.out.println("Codigo Rua Numero Complemento Bairro Cidade UF Cep");
+						for (Endereco endereco : listaEndereco) {
+							System.out.println(endereco.getIdEndereco() + "   " + endereco.getRua() + "     "
+									+ endereco.getNumero() + "  " + endereco.getComplemento() + "   "
+									+ endereco.getBairro() + "  " + endereco.getCidade() + "     " + endereco.getUf()
+									+ "    " + endereco.getCep());
+						}
+						System.out.println("Informe o Código do Endereço: ");
+						end.setIdEndereco(fcInt.nextInt());
+						System.out.println("Informe a Rua: ");
+						end.setRua(fcString.nextLine());
+						System.out.println("\nInforme o Número: ");
+						end.setNumero(fcInt.nextInt());
+						System.out.println("\nInforme o Complemento: ");
+						end.setComplemento(fcString.nextLine());
+						System.out.println("\nInforme o Bairro: ");
+						end.setBairro(fcString.nextLine());
+						System.out.println("\nInforme o Cep: ");
+						end.setCep(fcInt.nextInt());
+						System.out.println("\nInforme a Cidade: ");
+						end.setCidade(fcString.nextLine());
+						System.out.println("\nInforme a Uf: ");
+						end.setUf(fcString.nextLine());
+
+						enderecoDao.alterar(end);
+					} else if (op == 3) { // Alteração Conta
+
+						System.out.println("1-PJ / 2-PF");
+						int tpCli = fcInt.nextInt();
+						if (tpCli < 1 || tpCli > 2) {
+							System.out.println("Opção Inválida!");
+						} else if (tpCli == 1) {
+							System.out.println("CNPJ: ");
+							cli.setCpfCnpj(fcString.nextLine());
+							System.out.println("Insc.Estadual: ");
+							cli.setIe(fcString.nextLine());
+						} else {
+							System.out.println("CPF: ");
+							cli.setCpfCnpj(fcString.nextLine());
+							System.out.println("RG: ");
+							cli.setRg(fcString.nextLine());
+						}
+						Cliente cliente = clienteDao.pesquisar(cli);
+						System.out.println("Informe o Número da Conta: ");
+						cont.setNumero(fcString.nextLine());
+						cont.setCliente(cliente);
+						Conta conta = contaDao.pesquisar(cont);
+						mov.setConta(conta);
+						mov.setCliente(cliente);
+						int qtMov = movDao.idMov(mov, qtMov);
+						if (qtMov > 0) {
+							System.out.println(
+									"Foram realizadas movimentações nessa conta," + " não será possível alterar!");
+						} else {
+							System.out.println("Informe o novo Numero: ");
+							cont.setNumero(fcString.nextLine());
+
+							contaDao.alterar(cont);
+
+						}
+					}
+
+					break;
+
+				case 3: // Exclusões
+
+					Menu.menu();
+					Menu.opcao();
+					System.out.println("Informe a opção desejada: ");
+					op = fcInt.nextInt();
+
+					if (op == 1) { // Exclusão Cliente
+
+						System.out.println("1-PJ / 2-PF");
+						int tpCli = fcInt.nextInt();
+						if (tpCli < 1 || tpCli > 2) {
+							System.out.println("Opção Inválida!");
+						} else if (tpCli == 1) {
+							System.out.println("CNPJ: ");
+							cli.setCpfCnpj(fcString.nextLine());
+							System.out.println("Insc.Estadual: ");
+							cli.setIe(fcString.nextLine());
+						} else {
+							System.out.println("CPF: ");
+							cli.setCpfCnpj(fcString.nextLine());
+							System.out.println("RG: ");
+							cli.setRg(fcString.nextLine());
+						}
+						Cliente cliente = clienteDao.pesquisar(cli);
+						mov.setCliente(cliente);
+						Movimentacoes movim = movDao.pesquisar(mov);
+						if (movim.getIdMovim() > 0) {
+							System.out.println(
+									"Foram realizadas movimentações nesse cliente," + "não será possível excluir!");
+						} else {
+							clienteDao.remover(cliente);
+							System.out.println("Cliente excluído com sucesso!");
+						}
+					} else if (op == 2) { // Exclusão Endereço
+						List<Endereco> listaEndereco = enderecoDao.listarTodos();
+						Menu.menu();
+						System.out.println("Codigo Rua Numero Complemento Bairro Cidade UF Cep");
+						for (Endereco endereco : listaEndereco) {
+							System.out.println(endereco.getIdEndereco() + "   " + endereco.getRua() + "     "
+									+ endereco.getNumero() + "  " + endereco.getComplemento() + "   "
+									+ endereco.getBairro() + "  " + endereco.getCidade() + "     " + endereco.getUf()
+									+ "    " + endereco.getCep());
+						}
+						System.out.println("Informe o Código do Endereço: ");
+						int idEnd = fcInt.nextInt();
+
+						enderecoDao.remover(idEnd);
+
+					} else if (op == 3) { // Exclusão Conta
+						System.out.println("Informe o Número da Conta: ");
+						cont.setNumero(fcString.nextLine());
+						Conta conta = contaDao.pesquisar(cont);
+						mov.setConta(conta);
+						movDao.pesquisar(mov);
+						if (mov.getIdMovim() > 0) {
+							cont.setStatusConta("I");
+							contaDao.alterar(cont);
+
+						} else {
+							contaDao.remover(conta.getIdConta());
+						}
+						System.out.println("Conta excluída com sucesso!");
+					}
+
+					break;
+
+				default:
+					System.out.println("Opção Inválida!");
+					break;
+				}
+				break;
+
+			case 2: // Relatórios
+				Menu.menu();
+				Menu.opRel();
+				System.out.println("Informe a opção desejada: ");
+				int rel = fcInt.nextInt();
+				switch (rel) {
+				case 1: // Saldo Por Cliente
+
+					Menu.menu();
+					System.out.println("1-PJ / 2-PF");
+					int tpCli = fcInt.nextInt();
+					if (tpCli < 1 || tpCli > 2) {
+						System.out.println("Opção Inválida!");
+					} else if (tpCli == 1) {
+						System.out.println("CNPJ: ");
+						cli.setCpfCnpj(fcString.nextLine());
+						System.out.println("Insc.Estadual: ");
+						cli.setIe(fcString.nextLine());
+					} else {
+						System.out.println("CPF: ");
+						cli.setCpfCnpj(fcString.nextLine());
+						System.out.println("RG: ");
+						cli.setRg(fcString.nextLine());
+					}
+					Cliente cliente = clienteDao.pesquisar(cli);
+					Endereco endereco = enderecoDao.pesquisar(cliente.getEndereco());
+					Menu.menu();
+					int tpMov = 0, credito = 0, debito = 0;
+					Double vlPago = 0.00;
+					List<Movimentacoes> listaMovim = movDao.listarTodos();
+					for (Movimentacoes moviment : listaMovim) {
+						if(moviment.getCliente().getIdCliente() == (cliente.getIdCliente())) {
+							tpMov = ((Movimentacoes)moviment).getTpMovim();
+							if(tpMov == 1) {
+								credito = credito + 1;
+							} else {
+								debito = debito + 1;
+							}
+							
+						}
+					}
+					
+					if((credito + debito) <= 10) {
+						vlPago = 1.00;
+					} else if((credito + debito) > 10 && (credito + debito) <= 20) {
+						vlPago = 0.75;
+					} else {
+						vlPago = 0.50;
+					}
+					System.out.println("RELATóRIO DE SALDO POR CLIENTE");
+					System.out.println("------------------------------------");
+					System.out.println("Cliente: " + cliente.getNome() + " - Cliente desde: " + cliente.getDtCadastro());
+					System.out.println("Endereço: " + endereco.getRua() + endereco.getNumero() + endereco.getComplemento() 
+					+ endereco.getBairro() + endereco.getCidade() + endereco.getUf() + endereco.getCep() );
+					System.out.println("Movimentações de Crédito: " + credito);
+					System.out.println("Movimentações de Débito: " + debito);
+					System.out.println("Total de Movimentações: " + (credito + debito));
+					System.out.println("Valor Pago Pelas Movimentações: " + ((credito + debito) * vlPago));
+					System.out.println("Saldo Inicial: " + cliente.getSaldoInicial());
+					System.out.println("Saldo Atual: " + cliente.getSaldoAtual());
+					
+					break;
+				case 2: // Saldo Por Cliente/Periodo
+					break;
+				case 3: // Saldo Clientes Geral
+
+					List<Cliente> listaCliente = clienteDao.listarTodos();
+					Menu.menu();
+					System.out.println("RELATÓRIO DE SALDO DE TODOS OS CLIENTES");
+					System.out.println("--------------------------------------------");
+					for (Cliente clientes : listaCliente) {
+						System.out
+								.println("Cliente: " + clientes.getNome() + " Cliente desde: " + clientes.getDtCadastro()
+										+ "-" + " Saldo em " + date.format(data) + ": " + clientes.getSaldoAtual());
+					}
+
+					break;
+
+				case 4: // Receita Empresa
+					break;
+
+				default:
+					break;
+				}
+				break;
+			case 3: // Movimentações
+				Movimentacoes movimento = new Movimentacoes();
+				Menu.menu();
+				System.out.println("1-PJ / 2-PF");
+				int tpCli = fcInt.nextInt();
+				if (tpCli < 1 || tpCli > 2) {
+					System.out.println("Opção Inválida!");
+				} else if (tpCli == 1) {
+					System.out.println("CNPJ: ");
+					cli.setCpfCnpj(fcString.nextLine());
+					System.out.println("Insc.Estadual: ");
+					cli.setIe(fcString.nextLine());
+				} else {
+					System.out.println("CPF: ");
+					cli.setCpfCnpj(fcString.nextLine());
+					System.out.println("RG: ");
+					cli.setRg(fcString.nextLine());
+				}
+				Cliente cliente = clienteDao.pesquisar(cli);
+				movimento.setCliente(cliente);
+				cont.setCliente(cliente);
+				System.out.println("Número da conta: ");
+				cont.setNumero(fcString.nextLine());
+				Conta conta = contaDao.pesquisar(cont);
+				movimento.setConta(conta);
+				System.out.println("1-Crédito / 2-Débito: ");
+				movimento.setTpMovim(fcInt.nextInt());
+				System.out.println("Valor da Movimentação: ");
+				Double vlMovimento = fcInt.nextDouble();
+				System.out.println("Data do movimento(dd/mm/aaaa): ");
+				movimento.setDataMovim(fcString.nextLine());
+				if(movimento.getTpMovim() == 1) {
+					cliente.setSaldoAtual(cliente.getSaldoAtual() + vlMovimento);
+				} else if(movimento.getTpMovim() == 2) {
+					cliente.setSaldoAtual(cliente.getSaldoAtual() - vlMovimento);
+				}
+				movDao.salvar(movimento);
+				clienteDao.alterar(cliente);
+				break;
+			case 4: // Sair
+				System.out.println("Programa finalizado!");
+				break;
+
+			default:
+				System.out.println("Opção Inválida!");
+				break;
+
+			}
+		} while (menu != 4);
+
+		System.exit(0);
+	}
+
+	/*
+	 * end.setRua("Argentina"); end.setNumero(7); end.setBairro("Cavaleiro");
+	 * end.setComplemento("Casa"); end.setCep(54250020); end.setCidade("Jaboatão");
+	 * end.setUf("PE");
+	 * 
+	 * //enderecoDao.salvar(end);
+	 */
+
+	/*
+	 * cont.setNumero("3"); cont.setStatusConta("A");
+	 */
+
+	/*
+	 * cli.setCpfCnpj("33333333333"); cli.setNome("Arthur");
+	 * cli.setTelefone("44444444"); cli.setRgIe("2222222");
+	 * //cli.setSaldoAtual(100.00); cli.setSaldoInicial(20.00);
+	 * cli.setEndereco(end); cont.setCliente(cli); listaConta.add(cont);
+	 * cli.setListaConta(listaConta);
+	 * 
+	 * clienteDao.salvar(cli); //contaDao.salvar(cont);
+	 */
+
+	// end.setIdEndereco(5);
+	// end.setRua("João Murilo");
+	/*
+	 * end.setNumero(7); end.setBairro("Cavaleiro"); end.setComplemento("Casa");
+	 * end.setCep(54250020); end.setCidade("Jaboatão"); end.setUf("PE");
+	 * //enderecoDao.remover(3);
+	 * 
+	 * enderecoDao.alterar(end);
+	 */
+	// enderecoDao.pesquisar(end);
+	// System.out.println(end.toString());
+
+}

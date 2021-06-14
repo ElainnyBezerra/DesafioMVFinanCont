@@ -1,0 +1,20 @@
+package util;
+
+public class JpaUtil {
+	
+private static EntityManagerFactory factory;
+	
+	static {
+		factory = Persistence.createEntityManagerFactory("DESAFIOMVFINANCONT");
+	}
+	
+	public static EntityManager getEntityManager() {
+		return factory.createEntityManager();
+	}
+	
+	public static void close() {
+		factory.close();
+	}
+
+
+}

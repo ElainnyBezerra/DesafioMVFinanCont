@@ -1,0 +1,64 @@
+package dao.impl;
+
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.persistence.Query;
+
+import entidade.Endereco;
+import util.JpaUtil;
+
+public class MovimentacoesDaoImpl {
+	
+	private EntityManager em;
+	private EntityTransaction et;
+
+	public void salvar(Movimentacoes movimentacoes) {
+		try {
+			this.em = JpaUtil.getEntityManager();
+			et = em.getTransaction();
+			et.begin();
+			em.persist(movimentacoes);
+			et.commit();
+		} catch (Exception e) {
+			if (em.isOpen()) {
+				et.rollback();
+			}
+			System.out.println("Cadastro NÃ£o realizado! Favor verificar as informaÃ§Ãµes.");
+		} finally {
+			if (em.isOpen()) {
+				em.close();
+			}
+		}
+
+	}
+
+	public Movimentacoes pesquisar(Movimentacoes movimentacoes) {
+		
+		try {
+			this.em = JpaUtil.getEntityManager();
+			movimentacoes = em.find(Endereco.class, movimentacoes.getIdMovimentacoes());
+		} catch (Exception e) {
+			if (em.isOpen()) {
+				et.rollback();
+			}
+			System.out.println("EndereÃ§o nÃ£o localizado! Favor verificar as informaÃ§Ãµes.");
+		} finally {
+			if (em.isOpen()) {
+				em.close();
+			}
+		}
+		return movimentacoes;
+	}
+
+	public List<Endereco> listarTodos() {
+		this.em = JpaUtil.getEntityManager();
+		Query query = em.createQuery("from Movimentacoes e");
+		List<Endereco> listaMovimentacoes = query.getResultList();
+		em.close();
+		return listaMovimentacoes;
+	}
+
+
+}

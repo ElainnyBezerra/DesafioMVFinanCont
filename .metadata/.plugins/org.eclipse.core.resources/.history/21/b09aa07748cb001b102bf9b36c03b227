@@ -1,0 +1,13 @@
+package DesafioMVFinanCont.DesafioMVFinanCont;
+
+import javax.persistence.EntityManager;
+
+import util.JpaUtil;
+
+public class App 
+{
+    public static void main( String[] args )
+    {
+       
+    }
+}

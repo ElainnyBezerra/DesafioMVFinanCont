@@ -1,0 +1,107 @@
+package dao.impl;
+
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.persistence.Query;
+
+import dao.EnderecoDao;
+import entidade.Endereco;
+import util.JpaUtil;
+
+public class EnderecoDaoImpl implements EnderecoDao {
+
+	private EntityManager em;
+	private EntityTransaction et;
+
+	public void salvar(Endereco endereco) {
+		try {
+			this.em = JpaUtil.getEntityManager();
+			et = em.getTransaction();
+			et.begin();
+			em.persist(endereco);
+			et.commit();
+			System.out.println("Cadastro realizado com sucesso!");
+		} catch (Exception e) {
+			if (em.isOpen()) {
+				et.rollback();
+			}
+			System.out.println("Cadastro não realizado! Favor verificar as informações.");
+		} finally {
+			if (em.isOpen()) {
+				em.close();
+			}
+		}
+
+	}
+
+	public void alterar(Endereco endereco) {
+		try {
+			this.em = JpaUtil.getEntityManager();
+			et = em.getTransaction();
+			et.begin();
+			em.merge(endereco);
+			et.commit();
+			System.out.println("Alteração realizada com sucesso!");
+		} catch (Exception e) {
+			if (em.isOpen()) {
+				et.rollback();
+			}
+			System.out.println("Alteração não realizada! Favor verificar as informações. ");
+		} finally {
+			if (em.isOpen()) {
+				em.close();
+			}
+		}
+
+	}
+
+	public void remover(int id) {
+		try {
+			this.em = JpaUtil.getEntityManager();
+			et = em.getTransaction();
+			et.begin();
+			em.remove(em.find(Endereco.class, id));
+			et.commit();
+			System.out.println("Exclusão realizada com sucesso!");
+		} catch (Exception e) {
+			if (em.isOpen()) {
+				et.rollback();
+			}
+			System.out.println("Exclusão não realizada! Favor verificar as informações.");
+		} finally {
+			if (em.isOpen()) {
+				em.close();
+			}
+		}
+
+	}
+
+	public Endereco pesquisar(Endereco endereco) {
+		
+		try {
+			this.em = JpaUtil.getEntityManager();
+			endereco = em.find(Endereco.class, endereco.getIdEndereco());
+		} catch (Exception e) {
+			if (em.isOpen()) {
+				et.rollback();
+			}
+			System.out.println("EndereÃƒÂ§o nÃƒÂ£o localizado! Favor verificar as informaÃƒÂ§ÃƒÂµes.");
+		} finally {
+			if (em.isOpen()) {
+				em.close();
+			}
+		}
+		return endereco;
+	}
+
+	public List<Endereco> listarTodos() {
+		this.em = JpaUtil.getEntityManager();
+		Query query = em.createQuery("from Endereco e");
+		List<Endereco> listaEndereco = query.getResultList();
+		em.close();
+		return listaEndereco;
+	}
+
+}

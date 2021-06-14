@@ -1,0 +1,122 @@
+package dao.impl;
+
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.persistence.ParameterMode;
+import javax.persistence.Query;
+import javax.persistence.StoredProcedureQuery;
+
+import dao.ClienteDao;
+import entidade.Cliente;
+import util.JpaUtil;
+
+public class ClienteDaoImpl implements ClienteDao {
+
+	private EntityManager em;
+	private EntityTransaction et;
+
+	public void salvar(Cliente cliente) {
+		try {
+			this.em = JpaUtil.getEntityManager();
+			et = em.getTransaction();
+			et.begin();
+			em.persist(cliente);
+			et.commit();
+			System.out.println("Cadastro realizado com sucesso!");
+		} catch (Exception e) {
+			if (em.isOpen()) {
+				et.rollback();
+			}
+			System.out.println("Cadastro não realizado! Favor verificar informações.");
+		} finally {
+			if (em.isOpen()) {
+				em.close();
+			}
+		}
+
+	}
+
+	public void alterar(Cliente cliente) {
+		try {
+			this.em = JpaUtil.getEntityManager();
+			et = em.getTransaction();
+			et.begin();
+			em.merge(cliente);
+			et.commit();
+		} catch (Exception e) {
+			if (em.isOpen()) {
+				et.rollback();
+			}
+			System.out.println("Erro transacao");
+		} finally {
+			if (em.isOpen()) {
+				em.close();
+			}
+		}
+
+	}
+
+	public void remover(Cliente cliente) {
+		try {
+			this.em = JpaUtil.getEntityManager();
+			et = em.getTransaction();
+			et.begin();
+			em.remove(em.find(Cliente.class, cliente.getCpfCnpj()));
+			et.commit();
+		} catch (Exception e) {
+			if (em.isOpen()) {
+				et.rollback();
+			}
+			System.out.println("Erro transacao");
+		} finally {
+			if (em.isOpen()) {
+				em.close();
+			}
+		}
+
+	}
+
+	public Cliente pesquisar(Cliente cliente) {
+		StoredProcedureQuery query = em.createStoredProcedureQuery("busca_cliente")
+				.registerStoredProcedureParameter(
+				    1,
+				    String.class,
+				    ParameterMode.IN
+				)
+				.registerStoredProcedureParameter(
+				    2,
+				    Long.class,
+				    ParameterMode.OUT
+				)
+				.setParameter(1, cliente.getCpfCnpj());
+				 
+				query.execute();
+				 
+				Long idCliente = (Long) query.getOutputParameterValue(2);
+		try {
+			this.em = JpaUtil.getEntityManager();
+			cliente = em.find(Cliente.class, idCliente);
+		} catch (Exception e) {
+			if (em.isOpen()) {
+				et.rollback();
+			}
+			System.out.println("Erro transacao");
+		} finally {
+			if (em.isOpen()) {
+				em.close();
+			}
+		}
+		return cliente;
+	}
+
+	public List<Cliente> listarTodos() {
+		this.em = JpaUtil.getEntityManager();
+		Query query = em.createQuery("from Cliente e");
+		List<Cliente> listaCliente = query.getResultList();
+		em.close();
+		return listaCliente;
+	}
+
+}
